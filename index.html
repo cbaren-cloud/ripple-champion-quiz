@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What Kind of Ripple Champion Are You?</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .quiz-wrapper {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+      max-width: 680px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .quiz-header {
+      background: linear-gradient(135deg, #003366 0%, #0055a5 100%);
+      color: #fff;
+      padding: 40px 40px 32px;
+      text-align: center;
+    }
+    .quiz-header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      color: #d4e8ff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .quiz-header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .quiz-header p {
+      font-size: 14px;
+      color: #aaccee;
+      line-height: 1.5;
+    }
+
+    /* ── Progress ── */
+    .progress-area {
+      padding: 20px 40px 0;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .progress-bar {
+      height: 6px;
+      background: #e8edf3;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0055a5, #00a3e0);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ── Question ── */
+    .question-area {
+      padding: 28px 40px 32px;
+    }
+    .question-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #0055a5;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 19px;
+      font-weight: 700;
+      color: #1a1a2e;
+      line-height: 1.4;
+      margin-bottom: 22px;
+    }
+
+    /* ── Options ── */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 18px;
+      border: 2px solid #e0e7ef;
+      border-radius: 12px;
+      background: #fff;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+      width: 100%;
+    }
+    .option-btn:hover {
+      border-color: #0055a5;
+      background: #f0f7ff;
+    }
+    .option-btn.selected {
+      border-color: #0055a5;
+      background: #e8f2ff;
+    }
+    .option-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #e8edf3;
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.18s ease;
+      margin-top: 1px;
+    }
+    .option-btn.selected .option-letter {
+      background: #0055a5;
+      color: #fff;
+    }
+    .option-text {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.55;
+    }
+
+    /* ── Nav Buttons ── */
+    .nav-area {
+      padding: 0 40px 32px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .btn {
+      padding: 11px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.18s ease;
+    }
+    .btn-primary {
+      background: #0055a5;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #003f7d; }
+    .btn-primary:disabled {
+      background: #b0c4d8;
+      cursor: not-allowed;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #0055a5;
+      border: 2px solid #d0dce9;
+    }
+    .btn-ghost:hover { background: #f0f7ff; }
+
+    /* ── Start Screen ── */
+    .start-screen {
+      padding: 36px 40px 40px;
+      text-align: center;
+    }
+    .start-icon {
+      font-size: 52px;
+      margin-bottom: 18px;
+    }
+    .start-screen h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+    .start-screen p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 28px;
+    }
+    .champion-pills {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .pill {
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+    .pill-a { background: #e6f3ff; color: #0055a5; }
+    .pill-b { background: #fff0e6; color: #c05000; }
+    .pill-c { background: #e8f8ee; color: #1a7a40; }
+
+    /* ── Result Screen ── */
+    .result-screen {
+      padding: 0 0 40px;
+    }
+    .result-banner {
+      padding: 36px 40px 28px;
+      text-align: center;
+      color: #fff;
+    }
+    .result-banner.playmaker { background: linear-gradient(135deg, #0055a5, #00a3e0); }
+    .result-banner.apex     { background: linear-gradient(135deg, #b34000, #e07020); }
+    .result-banner.builder  { background: linear-gradient(135deg, #1a7a40, #34c468); }
+
+    .result-emoji { font-size: 54px; margin-bottom: 12px; }
+    .result-type-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+    .result-title {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .result-tagline {
+      font-size: 14px;
+      opacity: 0.85;
+      font-style: italic;
+    }
+
+    .result-body {
+      padding: 28px 40px 0;
+    }
+    .result-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 10px;
+    }
+    .trait-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .trait-chip {
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .playmaker .trait-chip { background: #e6f3ff; color: #0055a5; }
+    .apex .trait-chip      { background: #fff0e6; color: #c05000; }
+    .builder .trait-chip   { background: #e8f8ee; color: #1a7a40; }
+
+    .roles-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .role-chip {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f0f4f8;
+      color: #444;
+      border: 1px solid #e0e7ef;
+    }
+    .result-desc {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.7;
+      background: #f7f9fc;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 28px;
+      border-left: 4px solid currentColor;
+    }
+    .result-desc.playmaker { border-color: #0055a5; }
+    .result-desc.apex      { border-color: #c05000; }
+    .result-desc.builder   { border-color: #1a7a40; }
+
+    .retake-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+    .retake-btn:hover { opacity: 0.88; }
+    .retake-btn.playmaker { background: linear-gradient(135deg, #0055a5, #00a3e0); }
+    .retake-btn.apex      { background: linear-gradient(135deg, #b34000, #e07020); }
+    .retake-btn.builder   { background: linear-gradient(135deg, #1a7a40, #34c468); }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .quiz-header, .question-area, .nav-area, .start-screen, .result-body { padding-left: 20px; padding-right: 20px; }
+      .progress-area { padding-left: 20px; padding-right: 20px; }
+      .result-banner { padding-left: 20px; padding-right: 20px; }
+      .quiz-header h1 { font-size: 21px; }
+      .question-text { font-size: 16px; }
+      .result-title { font-size: 26px; }
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="quiz-wrapper">
+
+  <!-- ════ HEADER (always visible) ════ -->
+  <div class="quiz-header">
+    <div class="tag">Ripple Champions</div>
+    <h1>What Kind of Ripple Champion Are You?</h1>
+    <p>5 quick questions to reveal your champion profile</p>
+  </div>
+
+  <!-- ════ START SCREEN ════ -->
+  <div id="start-screen" class="start-screen">
+    <div class="start-icon">🏆</div>
+    <h2>Discover Your Champion Type</h2>
+    <p>Answer 5 fun, scenario-based questions to find out which Ripple Champion profile matches how you think and operate.</p>
+    <div class="champion-pills">
+      <span class="pill pill-a">⚡ The Playmaker</span>
+      <span class="pill pill-b">👑 The Apex</span>
+      <span class="pill pill-c">🔧 The Builder</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()" style="font-size:15px; padding:13px 36px; border-radius:12px;">Start Quiz →</button>
+  </div>
+
+  <!-- ════ QUIZ SCREEN ════ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-area">
+      <div class="progress-meta">
+        <span id="progress-label">Question 1 of 5</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="question-area">
+      <div class="question-number" id="q-number">QUESTION 1</div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options-list" id="options-list"></div>
+    </div>
+
+    <div class="nav-area">
+      <button class="btn btn-ghost" id="back-btn" onclick="goBack()" style="display:none;">← Back</button>
+      <button class="btn btn-primary" id="next-btn" onclick="goNext()" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- ════ RESULT SCREEN ════ -->
+  <div id="result-screen" class="hidden">
+    <div class="result-banner" id="result-banner">
+      <div class="result-emoji" id="result-emoji"></div>
+      <div class="result-type-label">Your Ripple Champion Profile</div>
+      <div class="result-title" id="result-title"></div>
+      <div class="result-tagline" id="result-tagline"></div>
+    </div>
+    <div class="result-body" id="result-body"></div>
+  </div>
+
+</div><!-- /.quiz-wrapper -->
+
+<script>
+  /* ── Quiz Data ── */
+  const questions = [
+    {
+      text: "You're heading to the airport. What best describes you?",
+      options: [
+        { letter: "A", text: "Get to the airport exactly on time, know what's available in each terminal, and navigate through with ease." },
+        { letter: "B", text: "Have someone drop you off, bypass the check-in line, and confidently stride through security." },
+        { letter: "C", text: "Arrive early, check the terminal map, know where you'll be sitting, and know exactly where to eat." }
+      ]
+    },
+    {
+      text: "You're at a new restaurant. What do you do?",
+      options: [
+        { letter: "A", text: "Can't decide (so you order multiple things), make friends with the waiter, and always know the best items on the menu." },
+        { letter: "B", text: "You already know exactly what you want before arriving — and you pick up the check." },
+        { letter: "C", text: "Review the menu beforehand, pick a meal that fits your dietary needs, and take your time ordering." }
+      ]
+    },
+    {
+      text: "You're stuck in an elevator. What do you do?",
+      options: [
+        { letter: "A", text: "Chat with the other passengers to keep everyone calm while looking for a solution." },
+        { letter: "B", text: "Take control of the situation, call for assistance, and keep everyone moving productively." },
+        { letter: "C", text: "Methodically troubleshoot the panel, check all possible solutions, and calmly assess the situation." }
+      ]
+    },
+    {
+      text: "You're at the grocery store. How do you shop?",
+      options: [
+        { letter: "A", text: "Explore new products, chat with other shoppers, and discover items you didn't know you needed." },
+        { letter: "B", text: "Arrive with a focused list, delegate tasks to others if needed, and head straight for the most efficient checkout." },
+        { letter: "C", text: "Have a detailed shopping list organized by aisle, research products beforehand, and compare labels carefully." }
+      ]
+    },
+    {
+      text: "You're at a theme park with friends. What's your move?",
+      options: [
+        { letter: "A", text: "Research must-see rides, talk to park employees for insider tips, and adapt the plan if a ride is closed." },
+        { letter: "B", text: "Choose the best ride first, determine the fastest routes, and lead the group through the park." },
+        { letter: "C", text: "Plan the itinerary down to the minute, check wait times in advance, and optimize the route for maximum efficiency." }
+      ]
+    }
+  ];
+
+  const results = {
+    A: {
+      key: "playmaker",
+      emoji: "⚡",
+      title: "The Playmaker",
+      tagline: "Proactive · Ambitious · Resourceful · Enterprising · Strategic",
+      roles: ["Business Development", "Strategic Initiatives", "Regional Lead"],
+      traits: ["Proactive", "Ambitious", "Resourceful", "Enterprising", "Strategic"],
+      desc: "You're the one who knows everyone in the room — and half the people outside it. A natural connector and operator, you thrive in fast-moving environments where relationships and adaptability are your superpower. You find opportunity where others see obstacles, and you never stop moving."
+    },
+    B: {
+      key: "apex",
+      emoji: "👑",
+      title: "The Apex",
+      tagline: "Decisive · Visionary · Reputation Conscious · Growth Oriented · Results-Driven",
+      roles: ["CEO", "C-Suite", "Co-founder"],
+      traits: ["Decisive", "Visionary", "Reputation Conscious", "Growth Oriented", "Results-Driven"],
+      desc: "You lead from the front. Comfortable making high-stakes calls with incomplete information, you combine strategic vision with an ownership mentality. People gravitate toward your clarity and confidence. You're not just playing the game — you're setting the terms."
+    },
+    C: {
+      key: "builder",
+      emoji: "🔧",
+      title: "The Builder",
+      tagline: "Pragmatic · Structured · Collaborative · Analytical · Diligent",
+      roles: ["Head of Product", "CTO", "Director of Product", "Senior Engineer"],
+      traits: ["Pragmatic", "Structured", "Collaborative", "Analytical", "Diligent"],
+      desc: "You are the engine behind the vision. Meticulous and methodical, you turn ambiguous ideas into reliable systems and scalable products. You ask the right questions, document the right decisions, and build things that last. The team trusts you because you always deliver."
+    }
+  };
+
+  /* ── State ── */
+  let current = 0;
+  const answers = new Array(questions.length).fill(null);
+
+  /* ── Init ── */
+  function startQuiz() {
+    document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = questions[current];
+    document.getElementById('q-number').textContent = `QUESTION ${current + 1}`;
+    document.getElementById('q-text').textContent = q.text;
+    document.getElementById('progress-label').textContent = `Question ${current + 1} of ${questions.length}`;
+    const pct = Math.round((current / questions.length) * 100);
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('progress-fill').style.width = pct + '%';
+
+    // Options
+    const list = document.getElementById('options-list');
+    list.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn' + (answers[current] === opt.letter ? ' selected' : '');
+      btn.innerHTML = `<span class="option-letter">${opt.letter}</span><span class="option-text">${opt.text}</span>`;
+      btn.addEventListener('click', () => selectOption(opt.letter, btn));
+      list.appendChild(btn);
+    });
+
+    // Back btn
+    document.getElementById('back-btn').style.display = current > 0 ? 'inline-block' : 'none';
+    // Next btn
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.textContent = current === questions.length - 1 ? 'See My Result 🏆' : 'Next →';
+    nextBtn.disabled = answers[current] === null;
+  }
+
+  function selectOption(letter, clickedBtn) {
+    answers[current] = letter;
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    clickedBtn.classList.add('selected');
+    document.getElementById('next-btn').disabled = false;
+  }
+
+  function goNext() {
+    if (answers[current] === null) return;
+    if (current < questions.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function goBack() {
+    if (current > 0) { current--; renderQuestion(); }
+  }
+
+  /* ── Result ── */
+  function showResult() {
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
+
+    // Tally
+    const counts = { A: 0, B: 0, C: 0 };
+    answers.forEach(a => { if (a) counts[a]++; });
+    const winner = Object.entries(counts).sort((x, y) => y[1] - x[1])[0][0];
+    const r = results[winner];
+
+    // Banner
+    const banner = document.getElementById('result-banner');
+    banner.className = `result-banner ${r.key}`;
+    document.getElementById('result-emoji').textContent = r.emoji;
+    document.getElementById('result-title').textContent = r.title;
+    document.getElementById('result-tagline').textContent = r.tagline;
+
+    // Body
+    const body = document.getElementById('result-body');
+    body.className = `result-body ${r.key}`;
+    body.innerHTML = `
+      <div class="result-section-label">Your Traits</div>
+      <div class="trait-chips">
+        ${r.traits.map(t => `<span class="trait-chip">${t}</span>`).join('')}
+      </div>
+      <div class="result-section-label">Common Roles</div>
+      <div class="roles-grid">
+        ${r.roles.map(role => `<span class="role-chip">💼 ${role}</span>`).join('')}
+      </div>
+      <p class="result-desc ${r.key}">${r.desc}</p>
+      <button class="retake-btn ${r.key}" onclick="retake()">↩ Retake the Quiz</button>
+    `;
+
+    // Update progress to 100%
+    document.getElementById('progress-fill').style.width = '100%';
+  }
+
+  function retake() {
+    current = 0;
+    answers.fill(null);
+    document.getElementById('result-screen').classList.add('hidden');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    renderQuestion();
+  }
+</script>
+</body>
+</html>
